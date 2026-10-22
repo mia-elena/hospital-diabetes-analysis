@@ -43,7 +43,7 @@ Data quality findings from profiling: `weight` is missing for 96.9% of encounter
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
-pip install pandas kaggle
+pip install -r requirements.txt
 kaggle datasets download -d brandao/diabetes -p data --unzip   # needs ~/.kaggle/kaggle.json
 python3 work/profile_csv.py data/diabetic_data.csv              # writes work/profile.md
 ```

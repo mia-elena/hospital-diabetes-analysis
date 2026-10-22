@@ -16,11 +16,75 @@ work/                             supporting work
     profile_csv.py                profiles the raw CSV → profile.md
     profile.md                    rows, columns, missing values, candidate keys
     design.md                     normalization notes and ER diagram source
-    er_diagram.png / .svg
+    er_diagram.png / .svg        Chen ER diagram (submitted)
+    erd.mmd                       Mermaid table diagram
 data/                             not committed; see data/README.md
 ```
 
 ## Design summary
+
+### Table diagram
+
+```mermaid
+erDiagram
+    PATIENT {
+        int patient_nbr PK
+        varchar race "NULL if unknown"
+        varchar gender
+    }
+
+    ENCOUNTER {
+        int encounter_id PK
+        int patient_nbr FK
+        tinyint admission_type_id FK
+        tinyint discharge_disposition_id FK
+        tinyint admission_source_id FK
+        varchar age "10-year band, e.g. [70-80)"
+        tinyint time_in_hospital "days, 1-14"
+        smallint num_lab_procedures
+        tinyint num_medications
+        tinyint number_inpatient "visits in prior year"
+        varchar A1Cresult "NULL = not measured"
+        varchar max_glu_serum "NULL = not measured"
+        varchar readmitted "NO, >30, <30"
+    }
+
+    ENCOUNTER_DIAGNOSIS {
+        int encounter_id PK, FK
+        tinyint diag_position PK "1 primary, 2 secondary, 3 additional"
+        varchar icd9_code FK
+    }
+
+    DIAGNOSIS {
+        varchar icd9_code PK "ICD-9, e.g. 250.83"
+    }
+
+    ADMISSION_TYPE {
+        tinyint admission_type_id PK
+        varchar description "Emergency, Urgent, Elective..."
+    }
+
+    DISCHARGE_DISPOSITION {
+        tinyint discharge_disposition_id PK
+        varchar description "Home, Transferred, Expired..."
+    }
+
+    ADMISSION_SOURCE {
+        tinyint admission_source_id PK
+        varchar description "Physician Referral, ER..."
+    }
+
+    PATIENT ||--|{ ENCOUNTER : "has"
+    ADMISSION_TYPE ||--o{ ENCOUNTER : "classifies"
+    DISCHARGE_DISPOSITION ||--o{ ENCOUNTER : "ends_with"
+    ADMISSION_SOURCE ||--o{ ENCOUNTER : "admitted_from"
+    ENCOUNTER ||--o{ ENCOUNTER_DIAGNOSIS : "diagnosed_with"
+    DIAGNOSIS ||--|{ ENCOUNTER_DIAGNOSIS : "appears_in"
+```
+
+`||--|{` one to one-or-many · `||--o{` one to zero-or-many. The M:N between encounters and diagnoses is the `ENCOUNTER_DIAGNOSIS` table. Only the most important `ENCOUNTER` columns are shown; all 21 are in [`work/design.md`](work/design.md). Source: [`work/erd.mmd`](work/erd.mmd).
+
+### Conceptual ER diagram (Chen notation, as submitted)
 
 ![ER diagram](work/er_diagram.png)
 

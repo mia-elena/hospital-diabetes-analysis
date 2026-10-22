@@ -6,7 +6,7 @@ CSCI 49376 Big Data Technology, Hunter College, Assignment 1. This repo holds **
 
 ## Report
 
-[CSCI 49376 Assignment 1 Report](https://docs.google.com/document/d/140eSlotDeqHnP9CK9eMYhFJ-Aq4qAY6knbByUARcM10/edit) (Google Doc, the source of truth). The sections below match it. PDF: [`CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf`](CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf).
+[CSCI 49376 Assignment 1 Report](https://docs.google.com/document/d/1sUI69l851CSfqtwmvFO14M0J4KRrnKSH_ZljGQQWP0k/edit) (Google Doc, the source of truth). The sections below match it. PDF: [`CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf`](CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf).
 
 ## Part 1. Select and Examine the Original Dataset
 
@@ -75,46 +75,38 @@ All are stored as NULL. Inconsistencies: 123 patients have two different race va
 
 ## Part 2. Normalize the Dataset
 
-Original relation → 1NF → 2NF. Each stage answers the six required items.
-
 ### Original relation
 
-1. **Structure:** DIABETIC_DATA(encounter_id, patient_nbr, race, gender, age, weight, admission_type_id, discharge_disposition_id, admission_source_id, time_in_hospital, payer_code, medical_specialty, num_lab_procedures, num_procedures, num_medications, number_outpatient, number_emergency, number_inpatient, **diag_1, diag_2, diag_3**, number_diagnoses, max_glu_serum, A1Cresult, diabetesMed, readmitted). One table, one row per hospital stay.
+1. **Structure:** DIABETIC_DATA(encounter_id, patient_nbr, race, gender, age, …, diag_1, diag_2, diag_3, …, readmitted), one row per stay
 2. **Key:** encounter_id
-3. **Functional dependencies:** encounter_id → every other column · patient_nbr → race, gender · admission_type_id → description (and the same for discharge_disposition_id and admission_source_id)
-4. **Problems:** diag_1, diag_2 and diag_3 are a **repeating group**: three columns holding the same kind of value. Patient race and gender repeat on every stay (30,248 extra copies).
-5. **Change needed for 1NF:** replace the three diagnosis columns with one row per diagnosis, and add diag_position (1 = primary, 2 = secondary, 3 = additional).
-6. **Normal form:** not in 1NF, because of the repeating group.
+3. **FDs:** encounter_id → all columns · patient_nbr → race, gender
+4. **Problem:** diag_1–diag_3 are a repeating group
+5. **Change:** one row per diagnosis, with diag_position (1, 2, 3)
+6. **Form:** not 1NF (repeating group)
 
 ### 1NF relation
 
-1. **Structure:** ENCOUNTER_1NF(encounter_id, diag_position, icd9_code, patient_nbr, race, gender, age, …, readmitted). One row per diagnosis.
-2. **Key:** (encounter_id, diag_position). We use the position, not the code, because 5,492 stays list the same code twice.
-3. **Functional dependencies:**
-    - FD1: (encounter_id, diag_position) → icd9_code (needs the whole key)
-    - FD2: encounter_id → patient_nbr, age, weight, the three codes, time_in_hospital, …, readmitted (needs only part of the key)
-    - FD3: patient_nbr → race, gender
-    - FD4: each code → its description
-4. **Problems:** FD2 is a **partial dependency**. Every stay column is copied once per diagnosis (see the example below).
-5. **Change needed for 2NF:** move FD2's columns into ENCOUNTER, keyed by encounter_id. To minimize redundancy, also move FD3 to PATIENT and FD4 to three code tables, and list each diagnosis code once in DIAGNOSIS.
-6. **Why it is 1NF:** every cell holds one value, and the repeating group is gone.
+1. **Structure:** ENCOUNTER_1NF(encounter_id, diag_position, icd9_code, patient_nbr, race, gender, age, …, readmitted), one row per diagnosis
+2. **Key:** (encounter_id, diag_position). The code alone can't be the key, because 5,492 stays repeat a code.
+3. **FDs:** (encounter_id, diag_position) → icd9_code · encounter_id → all stay columns · patient_nbr → race, gender
+4. **Problem:** partial dependency: stay columns depend on encounter_id only, so they repeat per diagnosis
+5. **Change:** move the stay columns to ENCOUNTER, the patient columns to PATIENT, and the codes to their own tables
+6. **Form:** 1NF (every cell holds one value)
 
-Example: one stay with three diagnoses becomes three rows, and its time_in_hospital is copied each time (the partial dependency).
-
-| encounter_id | diag_position | icd9_code | time_in_hospital | … |
-|---|---|---|---|---|
-| 1001 | 1 | 250.01 | 3 | … |
-| 1001 | 2 | 401 | 3 | … |
-| 1001 | 3 | 428 | 3 | … |
+| encounter_id | diag_position | icd9_code | time_in_hospital |
+|---|---|---|---|
+| 1001 | 1 | 250.01 | 3 |
+| 1001 | 2 | 401 | 3 |
+| 1001 | 3 | 428 | 3 |
 
 ### 2NF relations
 
-1. **Structure:** ENCOUNTER(encounter_id, patient_nbr, admission_type_id, discharge_disposition_id, admission_source_id, age, …, readmitted) · ENCOUNTER_DIAGNOSIS(encounter_id, diag_position, icd9_code) · PATIENT(patient_nbr, race, gender) · DIAGNOSIS(icd9_code) · ADMISSION_TYPE · DISCHARGE_DISPOSITION · ADMISSION_SOURCE (each: id, description)
-2. **Keys:** listed in the final tables below.
-3. **Functional dependencies:** FD1 in ENCOUNTER_DIAGNOSIS · FD2 in ENCOUNTER · FD3 in PATIENT · FD4 in the code tables
-4. **Problems:** none. There are no partial dependencies, and each fact is stored once.
-5. **Further changes:** none needed; this is the final design.
-6. **Why it is 2NF:** every non-key column depends on the whole key. Tables with a one-column key can't have a partial dependency, and in ENCOUNTER_DIAGNOSIS, icd9_code needs both encounter_id and diag_position.
+1. **Structure:** the 7 tables below
+2. **Keys:** see the Primary key column
+3. **FDs:** each table's columns depend on its whole key
+4. **Problem:** none; each fact is stored once
+5. **Change:** none (final design)
+6. **Form:** 2NF (no partial dependencies)
 
 ### Final tables
 
@@ -128,7 +120,7 @@ Example: one stay with three diagnoses becomes three rows, and its time_in_hospi
 | DISCHARGE_DISPOSITION | discharge_disposition_id, description | discharge_disposition_id | — |
 | ADMISSION_SOURCE | admission_source_id, description | admission_source_id | — |
 
-Nothing is lost: joining the tables rebuilds every original row. Expected rows: ENCOUNTER 101,766 · PATIENT 71,518 · ENCOUNTER_DIAGNOSIS 303,496 · DIAGNOSIS 915 · code tables 8 / 26 / 17.
+Lossless: joining the tables rebuilds every original row. Expected rows: ENCOUNTER 101,766 · PATIENT 71,518 · ENCOUNTER_DIAGNOSIS 303,496 · DIAGNOSIS 915 · code tables 8 / 26 / 17.
 
 ## Part 3. Construct an ER Diagram
 

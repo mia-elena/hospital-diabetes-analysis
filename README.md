@@ -7,18 +7,15 @@ CSCI 49376 Big Data Technology, Hunter College, Assignment 1. This repo holds **
 ## Repository layout
 
 ```
-CSCI49376_Assignment1_Yabar/      submission files (Partner A)
-    Assignment1_Report.pdf        Parts 1–4
-    ER_Diagram.pdf
-instructions/                     assignment, presentation instructions, work proposal
-work/                             supporting work
-    Assignment1_Report.docx       editable source of the report (export to PDF when done)
-    profile_csv.py                profiles the raw CSV → profile.md
-    profile.md                    rows, columns, missing values, candidate keys
-    design.md                     normalization notes and ER diagram source
-    er_diagram.png / .svg        Chen ER diagram (submitted)
-    erd.mmd / erd.png             Mermaid table diagram (source / image)
-data/                             not committed; see data/README.md
+CSCI49376_Assignment1_Yabar/        submission files (Partner A)
+    Assignment1_Report.pdf          Parts 1–4
+    ER_Diagram.pdf                  Chen ER diagram
+instructions/                       assignment and presentation instructions
+work/
+    Assignment1_Report.docx         editable source of the report
+    profile_csv.py                  profiles the raw CSV (rows, columns, missing values, keys)
+    erd.mmd                         table diagram source (rendered below)
+    er_diagram.png                  Chen ER diagram image
 ```
 
 ## Design summary
@@ -82,7 +79,7 @@ erDiagram
     DIAGNOSIS ||--|{ ENCOUNTER_DIAGNOSIS : "appears_in"
 ```
 
-`||--|{` one to one-or-many · `||--o{` one to zero-or-many. The M:N between encounters and diagnoses is the `ENCOUNTER_DIAGNOSIS` table. Only the most important `ENCOUNTER` columns are shown; all 21 are in [`work/design.md`](work/design.md). Source: [`work/erd.mmd`](work/erd.mmd).
+`||--|{` one to one-or-many · `||--o{` one to zero-or-many. The M:N between encounters and diagnoses is the `ENCOUNTER_DIAGNOSIS` table. Only the most important `ENCOUNTER` columns are shown; all 21 are in Part 2 of the report. Source: [`work/erd.mmd`](work/erd.mmd).
 
 ### Conceptual ER diagram (Chen notation, as submitted)
 
@@ -112,3 +109,5 @@ pip install -r requirements.txt
 kaggle datasets download -d brandao/diabetes -p data --unzip   # needs ~/.kaggle/kaggle.json
 python3 work/profile_csv.py data/diabetic_data.csv              # writes work/profile.md
 ```
+
+The data is not committed. `IDs_mapping.csv` (descriptions for the admission, discharge and source codes) comes from the UCI Machine Learning Repository, dataset 296; put it in `data/` too.

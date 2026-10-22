@@ -85,9 +85,6 @@ erDiagram
 
 `||--|{` one to one-or-many · `||--o{` one to zero-or-many. The M:N between encounters and diagnoses is the `ENCOUNTER_DIAGNOSIS` table. Only the most important `ENCOUNTER` columns are shown; all 21 are in Part 2 of the report. Source: [`work/erd.mmd`](work/erd.mmd).
 
-### Conceptual ER diagram (Chen notation, as submitted)
-
-![ER diagram](work/er_diagram.png)
 
 The flat 50-column CSV (26 columns in scope) is normalized into 7 tables:
 

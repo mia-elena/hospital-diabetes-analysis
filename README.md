@@ -70,7 +70,7 @@ erDiagram
     DIAGNOSIS ||--|{ ENCOUNTER_DIAGNOSIS : "appears_in"
 ```
 
-`||--|{` one to one-or-many · `||--o{` one to zero-or-many. The M:N between encounters and diagnoses is the `ENCOUNTER_DIAGNOSIS` table. Only the most important `ENCOUNTER` columns are shown; all 21 are in item 7 of the report. Source: [`work/erd.mmd`](work/erd.mmd).
+`||--|{` one to one-or-many · `||--o{` one to zero-or-many. The M:N between encounters and diagnoses is the `ENCOUNTER_DIAGNOSIS` table. Only the most important `ENCOUNTER` columns are shown; all 21 are in item 7 of the report. Source: [`work/table_diagram.mmd`](work/table_diagram.mmd). The Chen ER diagram (deliverable 9) is in `CSCI49376_Assignment1_Yabar/ER_Diagram.pdf`.
 
 
 The flat 50-column CSV (26 columns in scope) is normalized into 7 tables:

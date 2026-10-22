@@ -2,7 +2,7 @@
 
 Relational database design for **101,766 diabetic inpatient encounters** across 130 U.S. hospitals (1999–2008), the [Diabetes 130-US Hospitals](https://www.kaggle.com/datasets/brandao/diabetes) dataset (Strack et al., 2014).
 
-CSCI 49376 Big Data Technology, Hunter College, Assignment 1. This repo holds **Partner A's work: Parts 1–4** (dataset analysis, normalization, ER diagram, relational schema). The SQL implementation (Parts 5–7) is Partner B's and is not included here.
+CSCI 49376 Big Data Technology, Hunter College, Assignment 1. This repo holds **Partner A's work: deliverables 1–10** (dataset, attributes, normalization, functional dependencies, keys, ER diagram, relational schema). The SQL scripts and screenshots (deliverables 11–13) are Partner B's and are not included here.
 
 ## Editable report
 
@@ -83,7 +83,7 @@ erDiagram
     DIAGNOSIS ||--|{ ENCOUNTER_DIAGNOSIS : "appears_in"
 ```
 
-`||--|{` one to one-or-many · `||--o{` one to zero-or-many. The M:N between encounters and diagnoses is the `ENCOUNTER_DIAGNOSIS` table. Only the most important `ENCOUNTER` columns are shown; all 21 are in Part 2 of the report. Source: [`work/erd.mmd`](work/erd.mmd).
+`||--|{` one to one-or-many · `||--o{` one to zero-or-many. The M:N between encounters and diagnoses is the `ENCOUNTER_DIAGNOSIS` table. Only the most important `ENCOUNTER` columns are shown; all 21 are in item 7 of the report. Source: [`work/erd.mmd`](work/erd.mmd).
 
 
 The flat 50-column CSV (26 columns in scope) is normalized into 7 tables:

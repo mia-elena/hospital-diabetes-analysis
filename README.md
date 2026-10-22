@@ -6,7 +6,7 @@ CSCI 49376 Big Data Technology, Hunter College, Assignment 1. This repo holds **
 
 ## Editable report
 
-The report is edited in Google Docs: [CSCI 49376 Assignment 1 Report](https://docs.google.com/document/d/1uws78qfP8sHyH3o0gDAsBT7zOdZWg-uY7fI2vloTd7w/edit). Export it to PDF as `CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf` after each round of edits.
+The report is edited in Google Docs: [CSCI 49376 Assignment 1 Report](https://docs.google.com/document/d/1-cNh-NuGfREmi5sbFYx5jiEWIVyzA_Bz6OedEvMbPFE/edit). Export it to PDF as `CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf` after each round of edits.
 
 ## Repository layout
 
@@ -100,7 +100,7 @@ The flat 50-column CSV (26 columns in scope) is normalized into 7 tables:
 - **2NF:** attributes that depend only on `encounter_id` (a partial dependency) move to `encounter`.
 - **Beyond 2NF:** patient demographics and code descriptions get their own tables, removing 30,000+ redundant copies of patient data.
 
-Data quality findings from profiling: `weight` is missing for 96.9% of encounters, HbA1c was measured in only 16.7%, 123 patients have conflicting race values across visits, and 5,690 encounters repeat a diagnosis code in two slots.
+Data quality findings from profiling: `weight` is missing for 96.9% of encounters, HbA1c was measured in only 16.7%, 123 patients have conflicting race values across visits, and 5,492 encounters repeat a diagnosis code in two slots.
 
 ## Reproduce the profile
 

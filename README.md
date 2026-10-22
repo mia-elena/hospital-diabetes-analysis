@@ -17,7 +17,7 @@ work/                             supporting work
     profile.md                    rows, columns, missing values, candidate keys
     design.md                     normalization notes and ER diagram source
     er_diagram.png / .svg        Chen ER diagram (submitted)
-    erd.mmd                       Mermaid table diagram
+    erd.mmd / erd.png             Mermaid table diagram (source / image)
 data/                             not committed; see data/README.md
 ```
 

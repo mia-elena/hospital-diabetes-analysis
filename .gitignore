@@ -1,0 +1,13 @@
+# Data: download it, don't commit it (see data/README.md)
+data/*
+!data/README.md
+# Credentials
+kaggle.json
+.env
+# Python
+.venv/
+__pycache__/
+*.pyc
+# OS / editors
+.DS_Store
+.vscode/

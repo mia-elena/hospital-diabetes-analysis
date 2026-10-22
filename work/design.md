@@ -141,53 +141,9 @@ Expected row counts for Partner B's verification: `encounter` 101,766 · `patien
 
 ## Part 3. ER diagram
 
-Obsidian renders this. Export the note to PDF for `ER_Diagram.pdf`, or redraw it in draw.io / Lucidchart if you want participation shown with double lines.
+Drawn in Chen notation to match Lecture 2: rectangles = entities, diamonds = relationships, ovals = attributes (keys underlined), double line = total participation. Image: `er_diagram.png` (repo) / `ER_Diagram.pdf` (submission folder).
 
-```mermaid
-erDiagram
-    PATIENT ||--|{ ENCOUNTER : "has"
-    ADMISSION_TYPE ||--o{ ENCOUNTER : "classifies"
-    DISCHARGE_DISPOSITION ||--o{ ENCOUNTER : "ends with"
-    ADMISSION_SOURCE ||--o{ ENCOUNTER : "admitted from"
-    ENCOUNTER ||--o{ ENCOUNTER_DIAGNOSIS : "records"
-    DIAGNOSIS ||--|{ ENCOUNTER_DIAGNOSIS : "appears in"
-
-    PATIENT {
-        int patient_nbr PK
-        string race
-        string gender
-    }
-    ENCOUNTER {
-        int encounter_id PK
-        int patient_nbr FK
-        int admission_type_id FK
-        int discharge_disposition_id FK
-        int admission_source_id FK
-        string age
-        int time_in_hospital
-        string readmitted
-    }
-    ENCOUNTER_DIAGNOSIS {
-        int encounter_id PK, FK
-        int diag_position PK
-        string icd9_code FK
-    }
-    DIAGNOSIS {
-        string icd9_code PK
-    }
-    ADMISSION_TYPE {
-        int admission_type_id PK
-        string description
-    }
-    DISCHARGE_DISPOSITION {
-        int discharge_disposition_id PK
-        string description
-    }
-    ADMISSION_SOURCE {
-        int admission_source_id PK
-        string description
-    }
-```
+Relationships: PATIENT —HAS— ENCOUNTER (1:N, total both sides); ADMISSION_TYPE —CLASSIFIES—, DISCHARGE_DISPOSITION —ENDS_WITH—, ADMISSION_SOURCE —ADMITTED_FROM— ENCOUNTER (1:N, total on the ENCOUNTER side); ENCOUNTER —DIAGNOSED_WITH— DIAGNOSIS (M:N, relationship attribute `diag_position`, total on the DIAGNOSIS side).
 
 Relationships, cardinality and participation:
 
@@ -197,7 +153,7 @@ Relationships, cardinality and participation:
 | Admission type / discharge disposition / admission source → Encounter | 1:N each | Every encounter has one of each (total). A code may be unused (partial). |
 | Encounter — Diagnosis (through `encounter_diagnosis`) | **M:N** | An encounter has 0–3 diagnoses (partial: 21 encounters have no primary diagnosis). Each diagnosis code appears in at least one encounter (total). |
 
-The M:N between encounter and diagnosis is why `encounter_diagnosis` exists: an M:N relationship becomes its own table with a foreign key to each side.
+In the ER diagram the M:N is the DIAGNOSED_WITH diamond, not a box. In Part 4 it becomes the `encounter_diagnosis` table, with a foreign key to each side plus `diag_position`.
 
 ## Part 4. Relational schema (converted from the ER diagram)
 

@@ -4,6 +4,10 @@ Relational database design for **101,766 diabetic inpatient encounters** across 
 
 CSCI 49376 Big Data Technology, Hunter College, Assignment 1. This repo holds **Partner A's work: Parts 1–4** (dataset analysis, normalization, ER diagram, relational schema). The SQL implementation (Parts 5–7) is Partner B's and is not included here.
 
+## Editable report
+
+The report is edited in Google Docs: [CSCI 49376 Assignment 1 Report (Parts 1–4)](https://docs.google.com/document/d/1RkHBGaxaeaw8tRYqM_CeLM_eQewn_lA-xW-dn2gH_Fc/edit). Export it to PDF as `CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf` after each round of edits.
+
 ## Repository layout
 
 ```
@@ -12,7 +16,6 @@ CSCI49376_Assignment1_Yabar/        submission files (Partner A)
     ER_Diagram.pdf                  Chen ER diagram
 instructions/                       assignment and presentation instructions
 work/
-    Assignment1_Report.docx         editable source of the report
     profile_csv.py                  profiles the raw CSV (rows, columns, missing values, keys)
     factcheck.ipynb                 re-checks every number in the report against the raw CSV
     erd.mmd                         table diagram source (rendered below)

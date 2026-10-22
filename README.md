@@ -141,21 +141,21 @@ erDiagram
     ENCOUNTER {
         int encounter_id PK
         int patient_nbr FK
-        tinyint admission_type_id FK
-        tinyint discharge_disposition_id FK
-        tinyint admission_source_id FK
+        int admission_type_id FK
+        int discharge_disposition_id FK
+        int admission_source_id FK
         varchar age
         varchar weight
-        tinyint time_in_hospital
+        int time_in_hospital
         varchar payer_code
         varchar medical_specialty
-        smallint num_lab_procedures
-        tinyint num_procedures
-        tinyint num_medications
-        tinyint number_outpatient
-        tinyint number_emergency
-        tinyint number_inpatient
-        tinyint number_diagnoses
+        int num_lab_procedures
+        int num_procedures
+        int num_medications
+        int number_outpatient
+        int number_emergency
+        int number_inpatient
+        int number_diagnoses
         varchar max_glu_serum
         varchar A1Cresult
         varchar diabetesMed
@@ -163,22 +163,22 @@ erDiagram
     }
     ENCOUNTER_DIAGNOSIS {
         int encounter_id PK, FK
-        tinyint diag_position PK
+        int diag_position PK
         varchar icd9_code FK
     }
     DIAGNOSIS {
         varchar icd9_code PK
     }
     ADMISSION_TYPE {
-        tinyint admission_type_id PK
+        int admission_type_id PK
         varchar description
     }
     DISCHARGE_DISPOSITION {
-        tinyint discharge_disposition_id PK
+        int discharge_disposition_id PK
         varchar description
     }
     ADMISSION_SOURCE {
-        tinyint admission_source_id PK
+        int admission_source_id PK
         varchar description
     }
 ```

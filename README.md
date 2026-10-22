@@ -6,7 +6,7 @@ CSCI 49376 Big Data Technology, Hunter College, Assignment 1. This repo holds **
 
 ## Editable report
 
-The report is edited in Google Docs: [CSCI 49376 Assignment 1 Report (Parts 1–4)](https://docs.google.com/document/d/1RkHBGaxaeaw8tRYqM_CeLM_eQewn_lA-xW-dn2gH_Fc/edit). Export it to PDF as `CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf` after each round of edits.
+The report is edited in Google Docs: [CSCI 49376 Assignment 1 Report (Parts 1–4)](https://docs.google.com/document/d/1SV_F0IswuEGJ6ASq8n9ePwf8R5CxNdBE8PPJyMejDRY/edit). Export it to PDF as `CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf` after each round of edits.
 
 ## Repository layout
 

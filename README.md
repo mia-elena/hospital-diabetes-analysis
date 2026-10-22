@@ -14,6 +14,7 @@ instructions/                       assignment and presentation instructions
 work/
     Assignment1_Report.docx         editable source of the report
     profile_csv.py                  profiles the raw CSV (rows, columns, missing values, keys)
+    factcheck.ipynb                 re-checks every number in the report against the raw CSV
     erd.mmd                         table diagram source (rendered below)
     er_diagram.png                  Chen ER diagram image
 ```

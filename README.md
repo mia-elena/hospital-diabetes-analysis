@@ -6,7 +6,7 @@ CSCI 49376 Big Data Technology, Hunter College, Assignment 1. This repo holds **
 
 ## Report
 
-[CSCI 49376 Assignment 1 Report](https://docs.google.com/document/d/1sUI69l851CSfqtwmvFO14M0J4KRrnKSH_ZljGQQWP0k/edit) (Google Doc, the source of truth). The sections below match it. PDF: [`CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf`](CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf).
+[CSCI 49376 Assignment 1 Report](https://docs.google.com/document/d/1sUI69l851CSfqtwmvFO14M0J4KRrnKSH_ZljGQQWP0k/edit) [`CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf`](CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf).
 
 ## Part 1. Select and Examine the Original Dataset
 
@@ -222,14 +222,3 @@ There are no 1:1 relationships. The diagram matches Part 2: same seven tables, k
 | ENCOUNTER diagnosed with DIAGNOSIS | M:N | Its own table, ENCOUNTER_DIAGNOSIS: a foreign key to each side plus diag_position |
 
 Table creation order: PATIENT, ADMISSION_TYPE, DISCHARGE_DISPOSITION, ADMISSION_SOURCE, DIAGNOSIS → ENCOUNTER → ENCOUNTER_DIAGNOSIS.
-
-## Reproduce the profile
-
-```bash
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-kaggle datasets download -d brandao/diabetes -p data --unzip   # needs ~/.kaggle/kaggle.json
-python3 work/profile_csv.py data/diabetic_data.csv              # writes work/profile.md
-```
-
-The data is not committed. `IDs_mapping.csv` (descriptions for the admission, discharge and source codes) comes from the UCI Machine Learning Repository, dataset 296; put it in `data/` too.

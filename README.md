@@ -6,19 +6,19 @@ CSCI 49376 Big Data Technology, Hunter College, Assignment 1. This repo holds **
 
 ## Editable report
 
-The report is edited in Google Docs: [CSCI 49376 Assignment 1 Report (Parts 1–4)](https://docs.google.com/document/d/1SV_F0IswuEGJ6ASq8n9ePwf8R5CxNdBE8PPJyMejDRY/edit). Export it to PDF as `CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf` after each round of edits.
+The report is edited in Google Docs: [CSCI 49376 Assignment 1 Report](https://docs.google.com/document/d/1uws78qfP8sHyH3o0gDAsBT7zOdZWg-uY7fI2vloTd7w/edit). Export it to PDF as `CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf` after each round of edits.
 
 ## Repository layout
 
 ```
 CSCI49376_Assignment1_Yabar/        submission files (Partner A)
-    Assignment1_Report.pdf          Parts 1–4
+    Assignment1_Report.pdf          deliverables 1–10 (Partner A)
     ER_Diagram.pdf                  Chen ER diagram
 instructions/                       assignment and presentation instructions
 work/
     profile_csv.py                  profiles the raw CSV (rows, columns, missing values, keys)
     factcheck.ipynb                 re-checks every number in the report against the raw CSV
-    erd.mmd                         table diagram source (rendered below)
+    erd.mmd / erd.png               table diagram (source / image)
     er_diagram.png                  Chen ER diagram image
 ```
 

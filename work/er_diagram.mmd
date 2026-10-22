@@ -1,0 +1,56 @@
+erDiagram
+    PATIENT ||--|{ ENCOUNTER : "has (1:N)"
+    ADMISSION_TYPE ||--o{ ENCOUNTER : "classifies (1:N)"
+    DISCHARGE_DISPOSITION ||--o{ ENCOUNTER : "ends with (1:N)"
+    ADMISSION_SOURCE ||--o{ ENCOUNTER : "admitted from (1:N)"
+    ENCOUNTER ||--o{ ENCOUNTER_DIAGNOSIS : "diagnosed with (1:N)"
+    DIAGNOSIS ||--|{ ENCOUNTER_DIAGNOSIS : "appears in (1:N)"
+
+    PATIENT {
+        int patient_nbr PK
+        varchar race
+        varchar gender
+    }
+    ENCOUNTER {
+        int encounter_id PK
+        int patient_nbr FK
+        tinyint admission_type_id FK
+        tinyint discharge_disposition_id FK
+        tinyint admission_source_id FK
+        varchar age
+        varchar weight
+        tinyint time_in_hospital
+        varchar payer_code
+        varchar medical_specialty
+        smallint num_lab_procedures
+        tinyint num_procedures
+        tinyint num_medications
+        tinyint number_outpatient
+        tinyint number_emergency
+        tinyint number_inpatient
+        tinyint number_diagnoses
+        varchar max_glu_serum
+        varchar A1Cresult
+        varchar diabetesMed
+        varchar readmitted
+    }
+    ENCOUNTER_DIAGNOSIS {
+        int encounter_id PK, FK
+        tinyint diag_position PK
+        varchar icd9_code FK
+    }
+    DIAGNOSIS {
+        varchar icd9_code PK
+    }
+    ADMISSION_TYPE {
+        tinyint admission_type_id PK
+        varchar description
+    }
+    DISCHARGE_DISPOSITION {
+        tinyint discharge_disposition_id PK
+        varchar description
+    }
+    ADMISSION_SOURCE {
+        tinyint admission_source_id PK
+        varchar description
+    }

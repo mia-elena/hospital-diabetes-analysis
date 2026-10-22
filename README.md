@@ -6,7 +6,7 @@ CSCI 49376 Big Data Technology, Hunter College, Assignment 1. This repo holds **
 
 ## Report
 
-[CSCI 49376 Assignment 1 Report](https://docs.google.com/document/d/1gjNP8_rjTukxhXogu90t8OWf225iuSBZpU4ay4N316w/edit) (Google Doc, the source of truth). The sections below match it. PDF: [`CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf`](CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf).
+[CSCI 49376 Assignment 1 Report](https://docs.google.com/document/d/140eSlotDeqHnP9CK9eMYhFJ-Aq4qAY6knbByUARcM10/edit) (Google Doc, the source of truth). The sections below match it. PDF: [`CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf`](CSCI49376_Assignment1_Yabar/Assignment1_Report.pdf).
 
 ## Part 1. Select and Examine the Original Dataset
 
@@ -75,18 +75,46 @@ All are stored as NULL. Inconsistencies: 123 patients have two different race va
 
 ## Part 2. Normalize the Dataset
 
-Original relation → 1NF → 2NF. Rows 1–6 are the six items required for each stage.
+Original relation → 1NF → 2NF. Each stage answers the six required items.
 
-| | Original relation | 1NF | 2NF (final design) |
-|---|---|---|---|
-| **1. Structure** | DIABETIC_DATA(encounter_id, patient_nbr, race, gender, age, …, diag_1, diag_2, diag_3, …, readmitted): one table, one row per stay | ENCOUNTER_1NF(encounter_id, diag_position, icd9_code, patient_nbr, race, gender, age, …, readmitted): one row per diagnosis | 7 tables, listed below |
-| **2. Keys** | encounter_id | (encounter_id, diag_position) | One per table, listed below |
-| **3. Functional dependencies** | encounter_id → every other column<br>patient_nbr → race, gender<br>each code → its description | FD1: (encounter_id, diag_position) → icd9_code<br>FD2: encounter_id → age, time_in_hospital, …, readmitted<br>FD3: patient_nbr → race, gender<br>FD4: each code → description | FD1 → ENCOUNTER_DIAGNOSIS<br>FD2 → ENCOUNTER<br>FD3 → PATIENT<br>FD4 → the three code tables |
-| **4. Redundancy or dependency problems** | diag_1–diag_3 are a repeating group (three columns for one kind of value). Patient data repeats on every stay (30,248 extra copies). | Partial dependency (FD2): stay columns depend on only part of the key, so each stay's details are copied once per diagnosis. | None: no partial dependencies, and each fact is stored once. |
-| **5. Changes to reach the next form** | Turn the three diagnosis columns into one row per diagnosis and add diag_position (1, 2, 3). | Move FD2's columns to ENCOUNTER, keyed by encounter_id. To minimize redundancy, also move FD3 to PATIENT and FD4 to code tables. | Final design. |
-| **6. Why it satisfies the form** | Not in 1NF (repeating group). | Every cell holds one value, and the repeating group is gone. | Every non-key column depends on the whole key: one-column keys can't have partial dependencies, and in ENCOUNTER_DIAGNOSIS icd9_code needs both key columns. |
+### Original relation
 
-The key uses diag_position, not icd9_code, because 5,492 stays list the same code twice.
+1. **Structure:** DIABETIC_DATA(encounter_id, patient_nbr, race, gender, age, weight, admission_type_id, discharge_disposition_id, admission_source_id, time_in_hospital, payer_code, medical_specialty, num_lab_procedures, num_procedures, num_medications, number_outpatient, number_emergency, number_inpatient, **diag_1, diag_2, diag_3**, number_diagnoses, max_glu_serum, A1Cresult, diabetesMed, readmitted). One table, one row per hospital stay.
+2. **Key:** encounter_id
+3. **Functional dependencies:** encounter_id → every other column · patient_nbr → race, gender · admission_type_id → description (and the same for discharge_disposition_id and admission_source_id)
+4. **Problems:** diag_1, diag_2 and diag_3 are a **repeating group**: three columns holding the same kind of value. Patient race and gender repeat on every stay (30,248 extra copies).
+5. **Change needed for 1NF:** replace the three diagnosis columns with one row per diagnosis, and add diag_position (1 = primary, 2 = secondary, 3 = additional).
+6. **Normal form:** not in 1NF, because of the repeating group.
+
+### 1NF relation
+
+1. **Structure:** ENCOUNTER_1NF(encounter_id, diag_position, icd9_code, patient_nbr, race, gender, age, …, readmitted). One row per diagnosis.
+2. **Key:** (encounter_id, diag_position). We use the position, not the code, because 5,492 stays list the same code twice.
+3. **Functional dependencies:**
+    - FD1: (encounter_id, diag_position) → icd9_code (needs the whole key)
+    - FD2: encounter_id → patient_nbr, age, weight, the three codes, time_in_hospital, …, readmitted (needs only part of the key)
+    - FD3: patient_nbr → race, gender
+    - FD4: each code → its description
+4. **Problems:** FD2 is a **partial dependency**. Every stay column is copied once per diagnosis (see the example below).
+5. **Change needed for 2NF:** move FD2's columns into ENCOUNTER, keyed by encounter_id. To minimize redundancy, also move FD3 to PATIENT and FD4 to three code tables, and list each diagnosis code once in DIAGNOSIS.
+6. **Why it is 1NF:** every cell holds one value, and the repeating group is gone.
+
+Example: one stay with three diagnoses becomes three rows, and its time_in_hospital is copied each time (the partial dependency).
+
+| encounter_id | diag_position | icd9_code | time_in_hospital | … |
+|---|---|---|---|---|
+| 1001 | 1 | 250.01 | 3 | … |
+| 1001 | 2 | 401 | 3 | … |
+| 1001 | 3 | 428 | 3 | … |
+
+### 2NF relations
+
+1. **Structure:** ENCOUNTER(encounter_id, patient_nbr, admission_type_id, discharge_disposition_id, admission_source_id, age, …, readmitted) · ENCOUNTER_DIAGNOSIS(encounter_id, diag_position, icd9_code) · PATIENT(patient_nbr, race, gender) · DIAGNOSIS(icd9_code) · ADMISSION_TYPE · DISCHARGE_DISPOSITION · ADMISSION_SOURCE (each: id, description)
+2. **Keys:** listed in the final tables below.
+3. **Functional dependencies:** FD1 in ENCOUNTER_DIAGNOSIS · FD2 in ENCOUNTER · FD3 in PATIENT · FD4 in the code tables
+4. **Problems:** none. There are no partial dependencies, and each fact is stored once.
+5. **Further changes:** none needed; this is the final design.
+6. **Why it is 2NF:** every non-key column depends on the whole key. Tables with a one-column key can't have a partial dependency, and in ENCOUNTER_DIAGNOSIS, icd9_code needs both encounter_id and diag_position.
 
 ### Final tables
 
@@ -104,18 +132,68 @@ Nothing is lost: joining the tables rebuilds every original row. Expected rows: 
 
 ## Part 3. Construct an ER Diagram
 
-The submitted ER diagram (Chen notation, as taught in class) is [`CSCI49376_Assignment1_Yabar/ER_Diagram.pdf`](CSCI49376_Assignment1_Yabar/ER_Diagram.pdf).
+```mermaid
+erDiagram
+    PATIENT ||--|{ ENCOUNTER : "has (1:N)"
+    ADMISSION_TYPE ||--o{ ENCOUNTER : "classifies (1:N)"
+    DISCHARGE_DISPOSITION ||--o{ ENCOUNTER : "ends with (1:N)"
+    ADMISSION_SOURCE ||--o{ ENCOUNTER : "admitted from (1:N)"
+    ENCOUNTER ||--o{ ENCOUNTER_DIAGNOSIS : "diagnosed with (1:N)"
+    DIAGNOSIS ||--|{ ENCOUNTER_DIAGNOSIS : "appears in (1:N)"
 
-### Entities
+    PATIENT {
+        int patient_nbr PK
+        varchar race
+        varchar gender
+    }
+    ENCOUNTER {
+        int encounter_id PK
+        int patient_nbr FK
+        tinyint admission_type_id FK
+        tinyint discharge_disposition_id FK
+        tinyint admission_source_id FK
+        varchar age
+        varchar weight
+        tinyint time_in_hospital
+        varchar payer_code
+        varchar medical_specialty
+        smallint num_lab_procedures
+        tinyint num_procedures
+        tinyint num_medications
+        tinyint number_outpatient
+        tinyint number_emergency
+        tinyint number_inpatient
+        tinyint number_diagnoses
+        varchar max_glu_serum
+        varchar A1Cresult
+        varchar diabetesMed
+        varchar readmitted
+    }
+    ENCOUNTER_DIAGNOSIS {
+        int encounter_id PK, FK
+        tinyint diag_position PK
+        varchar icd9_code FK
+    }
+    DIAGNOSIS {
+        varchar icd9_code PK
+    }
+    ADMISSION_TYPE {
+        tinyint admission_type_id PK
+        varchar description
+    }
+    DISCHARGE_DISPOSITION {
+        tinyint discharge_disposition_id PK
+        varchar description
+    }
+    ADMISSION_SOURCE {
+        tinyint admission_source_id PK
+        varchar description
+    }
+```
 
-| Entity | Important attributes | Primary key | Foreign keys |
-|---|---|---|---|
-| PATIENT | race, gender | patient_nbr | — |
-| ENCOUNTER | age, time_in_hospital, A1Cresult, readmitted | encounter_id | patient_nbr, admission_type_id, discharge_disposition_id, admission_source_id |
-| DIAGNOSIS | — | icd9_code | — |
-| ADMISSION_TYPE | description | admission_type_id | — |
-| DISCHARGE_DISPOSITION | description | discharge_disposition_id | — |
-| ADMISSION_SOURCE | description | admission_source_id | — |
+Source: [`work/er_diagram.mmd`](work/er_diagram.mmd) · PDF: [`CSCI49376_Assignment1_Yabar/ER_Diagram.pdf`](CSCI49376_Assignment1_Yabar/ER_Diagram.pdf)
+
+**Notation (crow's foot):** two bars = exactly one · bar + crow's foot = one or many (total participation) · circle + crow's foot = zero or many (partial participation). PK = primary key, FK = foreign key.
 
 ### Relationships, cardinalities and participation
 
@@ -123,11 +201,11 @@ The submitted ER diagram (Chen notation, as taught in class) is [`CSCI49376_Assi
 |---|---|---|---|---|
 | has | PATIENT – ENCOUNTER | 1:N | A patient has many stays; a stay has one patient. | Total on both sides |
 | classifies | ADMISSION_TYPE – ENCOUNTER | 1:N | A type covers many stays; a stay has one type. | Total for ENCOUNTER, partial for the type |
-| ends_with | DISCHARGE_DISPOSITION – ENCOUNTER | 1:N | Same pattern. | Total for ENCOUNTER, partial for the disposition |
-| admitted_from | ADMISSION_SOURCE – ENCOUNTER | 1:N | Same pattern. | Total for ENCOUNTER, partial for the source |
-| diagnosed_with | ENCOUNTER – DIAGNOSIS | M:N | A stay has up to 3 diagnoses; a diagnosis appears in many stays. Attribute: diag_position. | Partial for ENCOUNTER (some stays have none), total for DIAGNOSIS |
+| ends with | DISCHARGE_DISPOSITION – ENCOUNTER | 1:N | Same pattern. | Total for ENCOUNTER, partial for the disposition |
+| admitted from | ADMISSION_SOURCE – ENCOUNTER | 1:N | Same pattern. | Total for ENCOUNTER, partial for the source |
+| diagnosed with | ENCOUNTER – DIAGNOSIS | M:N | A stay has up to 3 diagnoses; a diagnosis appears in many stays. Drawn as two 1:N relationships through ENCOUNTER_DIAGNOSIS, which also stores diag_position. | Partial for ENCOUNTER (some stays have no diagnosis), total for DIAGNOSIS |
 
-There are no 1:1 relationships. Notation: rectangle = entity, diamond = relationship, oval = attribute (key underlined), double line = total participation.
+There are no 1:1 relationships. The diagram matches Part 2: same seven tables, keys and foreign keys.
 
 ## Part 4. Convert the ER Diagram into Relational Tables
 
@@ -147,72 +225,11 @@ There are no 1:1 relationships. Notation: rectangle = entity, diamond = relation
 |---|---|---|
 | PATIENT has ENCOUNTER | 1:N | Foreign key ENCOUNTER.patient_nbr → PATIENT (on the N side, NOT NULL) |
 | ADMISSION_TYPE classifies ENCOUNTER | 1:N | Foreign key ENCOUNTER.admission_type_id → ADMISSION_TYPE |
-| DISCHARGE_DISPOSITION ends_with ENCOUNTER | 1:N | Foreign key ENCOUNTER.discharge_disposition_id → DISCHARGE_DISPOSITION |
-| ADMISSION_SOURCE admitted_from ENCOUNTER | 1:N | Foreign key ENCOUNTER.admission_source_id → ADMISSION_SOURCE |
-| ENCOUNTER diagnosed_with DIAGNOSIS | M:N | Its own table, ENCOUNTER_DIAGNOSIS: a foreign key to each side plus the relationship attribute diag_position |
+| DISCHARGE_DISPOSITION ends with ENCOUNTER | 1:N | Foreign key ENCOUNTER.discharge_disposition_id → DISCHARGE_DISPOSITION |
+| ADMISSION_SOURCE admitted from ENCOUNTER | 1:N | Foreign key ENCOUNTER.admission_source_id → ADMISSION_SOURCE |
+| ENCOUNTER diagnosed with DIAGNOSIS | M:N | Its own table, ENCOUNTER_DIAGNOSIS: a foreign key to each side plus diag_position |
 
 Table creation order: PATIENT, ADMISSION_TYPE, DISCHARGE_DISPOSITION, ADMISSION_SOURCE, DIAGNOSIS → ENCOUNTER → ENCOUNTER_DIAGNOSIS.
-
-### Table diagram
-
-```mermaid
-erDiagram
-    PATIENT {
-        int patient_nbr PK
-        varchar race "NULL if unknown"
-        varchar gender
-    }
-
-    ENCOUNTER {
-        int encounter_id PK
-        int patient_nbr FK
-        tinyint admission_type_id FK
-        tinyint discharge_disposition_id FK
-        tinyint admission_source_id FK
-        varchar age "10-year band, e.g. [70-80)"
-        tinyint time_in_hospital "days, 1-14"
-        smallint num_lab_procedures
-        tinyint num_medications
-        tinyint number_inpatient "visits in prior year"
-        varchar A1Cresult "NULL = not measured"
-        varchar max_glu_serum "NULL = not measured"
-        varchar readmitted "NO, >30, <30"
-    }
-
-    ENCOUNTER_DIAGNOSIS {
-        int encounter_id PK, FK
-        tinyint diag_position PK "1 primary, 2 secondary, 3 additional"
-        varchar icd9_code FK
-    }
-
-    DIAGNOSIS {
-        varchar icd9_code PK "ICD-9, e.g. 250.83"
-    }
-
-    ADMISSION_TYPE {
-        tinyint admission_type_id PK
-        varchar description "Emergency, Urgent, Elective..."
-    }
-
-    DISCHARGE_DISPOSITION {
-        tinyint discharge_disposition_id PK
-        varchar description "Home, Transferred, Expired..."
-    }
-
-    ADMISSION_SOURCE {
-        tinyint admission_source_id PK
-        varchar description "Physician Referral, ER..."
-    }
-
-    PATIENT ||--|{ ENCOUNTER : "has"
-    ADMISSION_TYPE ||--o{ ENCOUNTER : "classifies"
-    DISCHARGE_DISPOSITION ||--o{ ENCOUNTER : "ends_with"
-    ADMISSION_SOURCE ||--o{ ENCOUNTER : "admitted_from"
-    ENCOUNTER ||--o{ ENCOUNTER_DIAGNOSIS : "diagnosed_with"
-    DIAGNOSIS ||--|{ ENCOUNTER_DIAGNOSIS : "appears_in"
-```
-
-`||--|{` one to one-or-many · `||--o{` one to zero-or-many. Main ENCOUNTER columns only. Source: [`work/table_diagram.mmd`](work/table_diagram.mmd).
 
 ## Reproduce the profile
 

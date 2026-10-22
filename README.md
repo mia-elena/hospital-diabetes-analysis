@@ -12,6 +12,7 @@ CSCI49376_Assignment1_Yabar/      submission files (Partner A)
     ER_Diagram.pdf
 instructions/                     assignment, presentation instructions, work proposal
 work/                             supporting work
+    Assignment1_Report.docx       editable source of the report (export to PDF when done)
     profile_csv.py                profiles the raw CSV → profile.md
     profile.md                    rows, columns, missing values, candidate keys
     design.md                     normalization notes and ER diagram source

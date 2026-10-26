@@ -37,35 +37,28 @@ Big Data Technology · Prof. Alex Liew
 	25. diabetesMed
 	26. readmitted
 7. Possible identifiers or keys:
-	1. encounter_id: key of a stay. One value per row (101,766).
-	2. patient_nbr: ID of a patient (71,518 patients). A patient can have several stays.
-	3. admission_type_id, discharge_disposition_id, admission_source_id: codes (8, 26, and 17 values).
-	4. diag_1, diag_2, diag_3: diagnosis codes. Many stays share a code.
+	1. encounter_id
+	2. patient_nbr
+	3. admission_type_id, discharge_disposition_id, admission_source_id
+	4. diag_1, diag_2, diag_3: diagnosis codes
 8. Missing, unknown or incomplete values:
 	1. weight (`?`)
 	2. max_glu_serum: None (not measured)
-	3. A1Cresult: None (not measured)
-	4. medical_specialty (`?`)
-	5. payer_code (`?`)
-	6. race (`?`, 2,273)
-	7. gender: Unknown/Invalid (3)
-	8. diag_1 (`?`, 21), diag_2 (`?`, 358), diag_3 (`?`, 1,423)
 	
-
 Inconsistencies: 123 patients have two different race values and 3 have two genders across stays 
 
 ## Part 2. Normalize the Dataset
 
-**In short:** 1NF puts each diagnosis on its own row. 2NF moves the stay columns to ENCOUNTER, so each stay is stored once.
+1NF puts each diagnosis on its own row. 2NF moves the stay columns to ENCOUNTER, so each stay is stored once.
 
-Example used throughout: stay 149190 (patient 55629189).
+Example used: stay 149190 (patient 55629189).
 **Stay columns** = the columns that describe one hospital visit: race, gender, age, weight, admission_type_id, discharge_disposition_id, admission_source_id, time_in_hospital, payer_code, medical_specialty, num_lab_procedures, num_procedures, num_medications, number_outpatient, number_emergency, number_inpatient, number_diagnoses, max_glu_serum, A1Cresult, diabetesMed, readmitted. Race and gender are stay columns. They can differ across a patient's stays.
 
 ### Original relation
 
 1. Structure: DIABETIC_DATA, one table, one row per stay (101,766 rows). diag_1, diag_2 and diag_3 are on that row.
 2. Key: encounter_id.
-3. Functional dependencies: encounter_id → every other column.
+3. Functional dependencies: encounter_id.
 4. Problem: diag_1, diag_2 and diag_3 are a repeating group. Three columns, same kind of value.
 5. Change: one row per diagnosis. Add diag_position, 1, 2 or 3.
 6. Form: 1NF. One value per cell.
@@ -77,9 +70,9 @@ Example used throughout: stay 149190 (patient 55629189).
 ### 1NF relation
 
 1. Structure: one row per diagnosis. diag_1, diag_2 and diag_3 become icd9_code, plus diag_position. Stay columns still repeat on each row.
-2. Key: (encounter_id, diag_position). 5,492 stays list the same code twice, so icd9_code is not in the key.
-3. Functional dependencies: (encounter_id, diag_position) → icd9_code. encounter_id → the stay columns.
-4. Problem: partial dependency. Stay columns depend on encounter_id only, so they repeat on every diagnosis row.
+2. Key: (encounter_id, diag_position)
+3. Functional dependencies: (encounter_id, diag_position).
+4. Problem: partial dependency.
 5. Change: move the stay columns to ENCOUNTER. Diagnoses stay in ENCOUNTER_DIAGNOSIS.
 6. Form: 2NF. Every non-key column depends on the whole key.
 
@@ -91,7 +84,7 @@ Example used throughout: stay 149190 (patient 55629189).
 
 ### 2NF relations
 
-1. Structure: ENCOUNTER(encounter_id, patient_nbr, stay columns) and ENCOUNTER_DIAGNOSIS(encounter_id, diag_position, icd9_code).
+1. Structure: ENCOUNTER(encounter_id, patient_nbr, stay columns) and ENCOUNTER_DIAGNOSIS(encounter_id, diag_position, icd9_code). No partial dependencies.
 2. Keys: ENCOUNTER: encounter_id. ENCOUNTER_DIAGNOSIS: (encounter_id, diag_position). encounter_id points to ENCOUNTER.
 3. Functional dependencies: encounter_id → the stay columns, in ENCOUNTER. (encounter_id, diag_position) → icd9_code, in ENCOUNTER_DIAGNOSIS.
 4. Problem: none.

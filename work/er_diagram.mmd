@@ -1,19 +1,19 @@
 erDiagram
     PATIENT ||--|{ ENCOUNTER : "has (1:N)"
-    ADMISSION_TYPE ||--o{ ENCOUNTER : "classifies (1:N)"
-    DISCHARGE_DISPOSITION ||--o{ ENCOUNTER : "ends with (1:N)"
-    ADMISSION_SOURCE ||--o{ ENCOUNTER : "admitted from (1:N)"
+    ADMISSION_TYPE ||--|{ ENCOUNTER : "classifies (1:N)"
+    DISCHARGE_DISPOSITION ||--|{ ENCOUNTER : "ends with (1:N)"
+    ADMISSION_SOURCE ||--|{ ENCOUNTER : "admitted from (1:N)"
     ENCOUNTER ||--o{ ENCOUNTER_DIAGNOSIS : "diagnosed with (1:N)"
     DIAGNOSIS ||--|{ ENCOUNTER_DIAGNOSIS : "appears in (1:N)"
 
     PATIENT {
         int patient_nbr PK
-        varchar race
-        varchar gender
     }
     ENCOUNTER {
         int encounter_id PK
         int patient_nbr FK
+        varchar race
+        varchar gender
         int admission_type_id FK
         int discharge_disposition_id FK
         int admission_source_id FK

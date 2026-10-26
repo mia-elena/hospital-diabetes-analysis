@@ -2,7 +2,7 @@
 
 Relational database design for **101,766 diabetic inpatient encounters** across 130 U.S. hospitals (1999–2008), the [Diabetes 130-US Hospitals](https://www.kaggle.com/datasets/brandao/diabetes) dataset (Strack et al., 2014).
 
-CSCI 49376 Big Data Technology, Hunter College, Assignment 1. This repo holds **Partner A's work: Parts 1–4** of the assignment (dataset analysis, normalization, ER diagram, relational schema). The SQL implementation (Parts 5–7) is Partner B's and is not included here.
+CSCI 49376 Big Data Technology, Hunter College, Assignment 1. Parts 1–4 are the report. Parts 5–7 are the SQL scripts in `work/sql/` and in the submission folder. Download `diabetic_data.csv` yourself. Do not commit it. The import script has a path you replace with your own copy.
 
 ## Report
 

@@ -36,35 +36,6 @@ Big Data Technology · Prof. Alex Liew
 	24. A1Cresult
 	25. diabetesMed
 	26. readmitted
-
-Ignored (24): metformin, repaglinide, nateglinide, chlorpropamide, glimepiride, acetohexamide, glipizide, glyburide, tolbutamide, pioglitazone, rosiglitazone, acarbose, miglitol, troglitazone, tolazamide, examide, citoglipton, insulin, glyburide-metformin, glipizide-metformin, glimepiride-pioglitazone, metformin-rosiglitazone, metformin-pioglitazone, change.
-6. Brief description of what each attribute represents:
-	1. encounter_id: Unique ID of one hospital stay
-	2. patient_nbr: ID of a patient (a patient can have several stays)
-	3. race: Caucasian, AfricanAmerican, Hispanic, Asian, Other
-	4. gender: Female, Male, Unknown/Invalid
-	5. age: Age group
-	6. weight: Weight band in pounds
-	7. admission_type_id: Code for the type of admission (e.g. emergency, elective)
-	8. discharge_disposition_id: Code for where the patient went at discharge (e.g. home)
-	9. admission_source_id: Code for where the patient came from (e.g. referral, ER)
-	10. time_in_hospital: Days in the hospital (1–14)
-	11. payer_code: Insurance code 
-	12. medical_specialty: Specialty of the admitting doctor
-	13. num_lab_procedures: Lab tests during the stay
-	14. num_procedures: Other procedures during the stay
-	15. num_medications: Distinct medications given
-	16. number_outpatient: Outpatient visits in the prior year
-	17. number_emergency: Emergency visits in the prior year
-	18. number_inpatient: Inpatient visits in the prior year
-	19. diag_1: Primary diagnosis (ICD-9 code)
-	20. diag_2: Secondary diagnosis (ICD-9 code)
-	21. diag_3: Additional diagnosis (ICD-9 code)
-	22. number_diagnoses: Number of diagnoses recorded
-	23. max_glu_serum: Glucose test: >200, >300, Norm, None (not measured)
-	24. A1Cresult: HbA1c test: >7, >8, Norm, None (not measured)
-	25. diabetesMed: Any diabetes medication prescribed: Yes/No
-	26. readmitted: NO, >30 (after 30 days), <30 (within 30 days)
 7. Possible identifiers or keys:
 	1. encounter_id: key of a stay. One value per row (101,766).
 	2. patient_nbr: ID of a patient (71,518 patients). A patient can have several stays.

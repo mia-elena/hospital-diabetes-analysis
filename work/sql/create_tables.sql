@@ -7,9 +7,7 @@ CREATE DATABASE hospital;
 USE hospital;
 
 CREATE TABLE patient (
-    patient_nbr INT PRIMARY KEY,
-    race VARCHAR(20),
-    gender VARCHAR(10)
+    patient_nbr INT PRIMARY KEY
 );
 
 CREATE TABLE admission_type (
@@ -34,6 +32,8 @@ CREATE TABLE diagnosis (
 CREATE TABLE encounter (
     encounter_id INT PRIMARY KEY,
     patient_nbr INT NOT NULL,
+    race VARCHAR(20),
+    gender VARCHAR(20),
     admission_type_id INT NOT NULL,
     discharge_disposition_id INT NOT NULL,
     admission_source_id INT NOT NULL,

@@ -23,20 +23,18 @@ SELECT COUNT(*) FROM encounter e LEFT JOIN admission_source s ON e.admission_sou
 SELECT COUNT(*) FROM encounter_diagnosis ed LEFT JOIN encounter e ON ed.encounter_id = e.encounter_id WHERE e.encounter_id IS NULL;
 SELECT COUNT(*) FROM encounter_diagnosis ed LEFT JOIN diagnosis g ON ed.icd9_code = g.icd9_code WHERE g.icd9_code IS NULL;
 
-SELECT e.encounter_id, p.race, p.gender, e.age, e.time_in_hospital,
+SELECT e.encounter_id, e.race, e.gender, e.age, e.time_in_hospital,
        ed.diag_position, ed.icd9_code, e.readmitted
 FROM encounter e
-JOIN patient p ON p.patient_nbr = e.patient_nbr
 LEFT JOIN encounter_diagnosis ed ON ed.encounter_id = e.encounter_id
 WHERE e.encounter_id = 2278392
 ORDER BY ed.diag_position;
 
 SELECT COUNT(*) AS readmitted_within_30_days FROM encounter WHERE readmitted = '<30>';
 
-SELECT p.gender,
+SELECT e.gender,
             ROUND(AVG(e.time_in_hospital), 2) AS avg_days,
             COUNT(*) AS stays
      FROM encounter AS e
-     JOIN patient AS p ON p.patient_nbr = e.patient_nbr
-     GROUP BY p.gender
-     ORDER BY p.gender;
+     GROUP BY e.gender
+     ORDER BY e.gender;

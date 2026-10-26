@@ -66,7 +66,7 @@ LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
 -- Parents first. Descriptions are the published IDS_mapping labels for codes that appear in the CSV.
--- PATIENT keeps race and gender from the stay with the greatest encounter_id.
+-- PATIENT is the patient id only. Race and gender stay on the encounter.
 -- '?' and the gender value Unknown/Invalid become NULL. 'None' on the two lab columns becomes NULL.
 
 INSERT INTO admission_type (admission_type_id, description) VALUES
@@ -123,18 +123,9 @@ INSERT INTO admission_source (admission_source_id, description) VALUES
     (20, 'Not Mapped'),
     (22, 'Transfer from hospital inpt/same fac reslt in a sep claim'),
     (25, 'Transfer from Ambulatory Surgery Center');
-INSERT INTO patient (patient_nbr, race, gender)
-SELECT s.patient_nbr,
-       NULLIF(s.race, '?'),
-       CASE WHEN s.gender = 'Unknown/Invalid' THEN NULL ELSE s.gender END
-FROM staging AS s
-JOIN (
-    SELECT patient_nbr, MAX(encounter_id) AS last_enc
-    FROM staging
-    GROUP BY patient_nbr
-) AS latest
-  ON s.patient_nbr = latest.patient_nbr
- AND s.encounter_id = latest.last_enc;
+INSERT INTO patient (patient_nbr)
+SELECT DISTINCT patient_nbr
+FROM staging;
 INSERT INTO diagnosis (icd9_code)
 SELECT diag_1 FROM staging WHERE diag_1 <> '?'
 UNION
@@ -142,7 +133,7 @@ SELECT diag_2 FROM staging WHERE diag_2 <> '?'
 UNION
 SELECT diag_3 FROM staging WHERE diag_3 <> '?';
 INSERT INTO encounter (
-    encounter_id, patient_nbr, admission_type_id, discharge_disposition_id,
+    encounter_id, patient_nbr, race, gender, admission_type_id, discharge_disposition_id,
     admission_source_id, age, weight, payer_code, medical_specialty,
     time_in_hospital, num_lab_procedures, num_procedures, num_medications,
     number_outpatient, number_emergency, number_inpatient, number_diagnoses,
@@ -151,6 +142,8 @@ INSERT INTO encounter (
 SELECT
     encounter_id,
     patient_nbr,
+    NULLIF(race, '?'),
+    CASE WHEN gender = 'Unknown/Invalid' THEN NULL ELSE gender END,
     admission_type_id,
     discharge_disposition_id,
     admission_source_id,
